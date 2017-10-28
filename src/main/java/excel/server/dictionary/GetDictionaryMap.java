@@ -1,5 +1,6 @@
 package excel.server.dictionary;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
@@ -12,20 +13,22 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.springframework.stereotype.Service;
 
 import excel.server.PathType;
 /**
  * 获得字典 map表
  * 
  */
+@Service
 public class GetDictionaryMap {
 	private Map<String,String>map;
 	private Workbook workbook;
 	public GetDictionaryMap(){
-		
-	}
 	
-	public Map<String,String> exce() {
+	}
+
+	public Map <String,String> exce() {
 		init();
 		for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
 			Sheet sheet = workbook.getSheetAt(i);
@@ -35,10 +38,12 @@ public class GetDictionaryMap {
 				Cell cell = row.getCell(0);
 				if(cell == null) continue;
 				String key = row.getCell(0).getStringCellValue();
-				
 				if(row.getCell(1) != null){
 					String value1 = row.getCell(1).getStringCellValue();
 					map.put(key, value1);
+				}
+				if(row.getCell(1) == null){
+					map.put(key, "");
 				}
 			}
 			System.out.println("*******换表*********");
@@ -48,10 +53,12 @@ public class GetDictionaryMap {
 	
 	private void init(){
 		map = new HashMap<String,String>();
-		String sourcePath = PathType.AllDictionary.getPath() + "dictionary_excel.xls";
-		System.out.println(sourcePath);
+		String sourcePath = PathType.AllDictionary.getPath();
+		File sourceFile = new File(sourcePath);
+		String dictionaryFile = getDictionary(sourceFile);
+		System.out.println(dictionaryFile);
 		try {
-			workbook = WorkbookFactory.create(new FileInputStream(sourcePath));
+			workbook = WorkbookFactory.create(new FileInputStream(dictionaryFile));
 		} catch ( IOException e) {
 			e.printStackTrace();
 		} catch (EncryptedDocumentException e) {
@@ -59,5 +66,22 @@ public class GetDictionaryMap {
 		} catch (InvalidFormatException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private String getDictionary(File sourceFile){
+		File flist[] = sourceFile.listFiles();
+		if (flist == null || flist.length == 0) {
+			System.out.println("字典为空");
+		}
+		for (File f : flist) {
+			if (f.isDirectory()) {
+				System.out.println("字典路径存在文件夹");
+			} else if (f.isFile()) {
+				f.getName().endsWith("dictionary.xls");
+				return f.getAbsoluteFile().toString(); 
+			}
+		}
+		System.out.println("不存在字典");
+		return null;
 	}
 }

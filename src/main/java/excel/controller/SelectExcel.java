@@ -11,17 +11,22 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import excel.server.ExcelMain;
 import excel.server.FormType;
+import excel.server.dictionary.GetDictionaryMap;
 
 @Controller
 public class SelectExcel {
 	@Autowired
 	private ExcelMain excelMain;
-	
+	@Autowired
+	private GetDictionaryMap getDictionaryMap;
 	@RequestMapping("/excel")
-	public String list(Model model) {
+	public String excel(Model model) {
 		return "excelselect";
 	}
-
+	@RequestMapping("/ui")
+	public String ui(Model model) {
+		return "uiselect";
+	}
 	@RequestMapping(value = "upload")
 	public synchronized String UploadSourceFile(MultipartHttpServletRequest request) throws IOException {
 		
@@ -39,6 +44,7 @@ public class SelectExcel {
 		Iterator<String> fileNames = request.getFileNames();
 		boolean isSuccess =  excelMain.exec(fileNames,request,FormType.Dictionarty); //上传字典表
 		if(isSuccess){
+			getDictionaryMap.exce();
 			return "success!,Make sure the name of the dictionary file is : dictionary_excel.xls";
 		} else{
 			return "error";
@@ -55,5 +61,4 @@ public class SelectExcel {
 			return "error";
 		}
 	}
-	
 }

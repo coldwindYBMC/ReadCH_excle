@@ -16,6 +16,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.springframework.stereotype.Service;
 
 import excel.server.PathType;
 
@@ -23,12 +24,13 @@ import excel.server.PathType;
  * 
  * 创建字典
  * */
+@Service
 public class CreateDictionary {
 	private HSSFWorkbook wb;
 	private Sheet sheet;
 	private CellStyle comCellStyle;
 	private static int rowCount = 1;
-	private static int  SHEET_MAX_COUNT = 10000;
+	private static int  SHEET_MAX_COUNT = 50000;
 	private static int  COLNUM_WIDTH = 10000;
 	private int sheetNum = 0;
 	public CreateDictionary() {
@@ -56,6 +58,15 @@ public class CreateDictionary {
 			createCell(comCellStyle, wb, row, 0, value, comfont);
 		}
 		
+		for(String Chkey : map.keySet()){
+			if(iscreateNewSheet()){
+				initSheet(row0, fieldfont);
+			}
+			Row row = sheet.createRow(rowCount++);
+			createCell(comCellStyle, wb, row, 0, Chkey, comfont); 		//原字典表中文
+			createCell(comCellStyle, wb, row, 1, map.get(Chkey), comfont);//原字典表语言1
+		}
+		
 		writeToExcel();
 		
 	}	
@@ -65,8 +76,8 @@ public class CreateDictionary {
 	 * */
 	public void writeToExcel() {
 		OutputStream out = null;
-		String rootPath = PathType.ComplementDictionary.getPath();
-		String xlsFile = rootPath + "dictionary_excel.xls";
+		String rootPath = PathType.DownDictionary.getPath();
+		String xlsFile = rootPath + "new_dictionary_excel.xls";
 		try {
 			File f = new File(rootPath);
 			if (!f.exists()) f.mkdirs();

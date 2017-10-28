@@ -23,7 +23,7 @@ public class DownExcel {
 	@RequestMapping(value="/download") //匹配的是href中的download请求
     public ResponseEntity<byte[]> download(HttpServletRequest request,@RequestParam("filename") String filename,
             Model model) throws IOException{
-        String downloadFilePath = PathType.ComplementDictionary.getPath();//从我们的文件中取
+        String downloadFilePath = PathType.DownDictionary.getPath();//从我们的文件中取
         
         File file = new File(downloadFilePath+File.separator+filename);//新建一个文件
         

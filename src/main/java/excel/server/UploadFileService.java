@@ -17,7 +17,7 @@ import excel.Util.Util;
  * **/
 @Service
 public class UploadFileService {
-	
+	private final String[]  allowTypes = {".xls",".hluiproj"};
 	public boolean upLoad(Iterator<String> fileNames, MultipartHttpServletRequest request, PathType path){
 		
 		// 检查该路径对应的目录是否存在. 如果不存在则创建目录
@@ -26,7 +26,9 @@ public class UploadFileService {
 		
 		while (fileNames.hasNext()) {
 			// 把fileNames集合中的值打出来
+			//MultiValueMap<String, MultipartFile>
 			String fileName = fileNames.next();
+			System.out.println("####:"+fileName);
 			/*
 			 * request.getFiles(fileName)方法即通过fileName这个Key, 得到对应的文件 集合列表.
 			 * 只是在这个Map中, 文件被包装成MultipartFile类型
@@ -34,7 +36,6 @@ public class UploadFileService {
 			List<MultipartFile> fileList = request.getFiles(fileName);
 
 			if (fileList.size() > 0) {
-
 				// 遍历文件列表
 				Iterator<MultipartFile> fileIte = fileList.iterator();
 
@@ -43,8 +44,12 @@ public class UploadFileService {
 					MultipartFile multipartFile = fileIte.next();
 					// 获得原文件名
 					String originalFilename = multipartFile.getOriginalFilename();
+					//是否是允许的后缀文件
+					if(!isValid(originalFilename, allowTypes)){
+						System.out.println("该文件不符合规范："+originalFilename);
+						continue;
+					}
 					// 设置保存路径.
-					
 					if (!dir.exists()) {
 						dir.mkdirs();
 					}
@@ -82,5 +87,18 @@ public class UploadFileService {
 		}
 		return true;
 	}
+	
+	 public static boolean isValid(String contentType, String... allowTypes) {  
+	        if (null == contentType || "".equals(contentType)) {  
+	            return false;  
+	        }  
+	        for (String type : allowTypes) {  
+	            if (contentType.endsWith(type)) {  
+	                return true;  
+	            }  
+	        }  
+	        return false;  
+	    }  
+	  
 	
 }

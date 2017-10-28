@@ -7,18 +7,18 @@
 </head>
 <body>
     <form action="${pageContext.request.contextPath}/upload" enctype="multipart/form-data" method="post">
-        多个源文件生成字典: <input type="file" name="fileList" multiple/></br/>  
-    <input type="submit" value="生成字典"><br>
+     excel多个源文件生成字典: <input type="file" name="fileList" multiple/></br/>  
+    <input type="submit" value="EXCEL生成字典"><br>
     </form>
     
     <form action="${pageContext.request.contextPath}/uploaddic" enctype="multipart/form-data" method="post">
         上传单个字典表文件: <input type="file" name="fileTest"><br/>  
-    <input type="submit" value="上传"><br>
+    <input type="submit" value="EXCEL上传"><br>
      </form>
      
     <form action="${pageContext.request.contextPath}/uploadtran" enctype="multipart/form-data" method="post">
         多个需要翻译的文件: <input type="file" name="fileTest" multiple><br/>  
-    <input type="submit" value="翻译"><br>
+    <input type="submit" value="EXCEL翻译"><br>
     </form>
     <br>
     <br>
@@ -28,8 +28,7 @@
   	  <br>
       <br>
       <br>
-  	 	The request was rejected because its size () exceeds the configured maximum ()
-  	 	上传文件过多，前端网面显示无法访问。
+  	 	生成字典或者翻译文件，记得上传相应的字典！字典后缀 "dictionary.xls"
   	 </h1> 
   	 
   	 

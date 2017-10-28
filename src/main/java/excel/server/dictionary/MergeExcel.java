@@ -13,20 +13,31 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import excel.Util.Util;
 import excel.server.PathType;
+import hluiproj.ReadHlUIFile;
 
-
+@Service
 public class MergeExcel {
+	@Autowired
+	private ReadHlUIFile  mergeUI;
 	private FileInputStream inputStream;
 	private FileOutputStream outputStream;
 	private Workbook workbook;
 
-	public MergeExcel() {
-		
+	
+	public void readfile(File file, Map<String,String> map){
+		//读取UI文件
+		if(file.getName().endsWith(".hluiproj")){
+			mergeUI.readUI(file,map);
+		} else{
+			readExcel(file,map);//读取excel文件
+		}
 	}
-
+	
 	@SuppressWarnings({ "deprecation" })
 	public void readExcel(File file, Map<String,String> map) {
 		if (file.getName().matches("^.+\\.(?i)((xls)|(xlsx))$")) {// 判断是否excel文档		
@@ -50,7 +61,6 @@ public class MergeExcel {
 						Cell cell = row.getCell(k);
 						if (cell == null) continue;
 						cell.setCellType(HSSFCell.CELL_TYPE_STRING);
-						
 						String value = cell.getStringCellValue();
 						if (Util.isChinese(value)) {
 							if (row0.getCell(k) == null) {                   //标题为空,清楚
@@ -72,7 +82,6 @@ public class MergeExcel {
 				e.printStackTrace();
 			}
 		}
-
 	}
 
 

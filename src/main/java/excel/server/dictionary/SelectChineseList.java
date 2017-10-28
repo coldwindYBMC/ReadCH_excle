@@ -14,13 +14,20 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import excel.Util.Util;
+import hluiproj.ReadHlUIFile;
 
-
-
+/***
+ * 筛选处文件的中文
+ **/
+@Service
 public class SelectChineseList {
-	public  List<String>list;
+	@Autowired
+	private ReadHlUIFile readUI;
+	private List<String>list;
 	private FileInputStream inputStream;
 	private Workbook workbook;
 
@@ -28,6 +35,15 @@ public class SelectChineseList {
 		init();
 	}
 
+	public void readfile(File file){
+		//读取UI文件
+		if(file.getName().endsWith(".hluiproj")){
+			readUI.readUI(file,list);
+		} else{
+			readExcel(file);//读取excel文件
+		}
+	}
+	
 	@SuppressWarnings({ "deprecation" })
 	public void readExcel(File file) {
 		if (file.getName().matches("^.+\\.(?i)((xls)|(xlsx))$")) {// 判断是否excel文档		
@@ -78,7 +94,7 @@ public class SelectChineseList {
 		}
 
 	}
-
+	
 	// 结束查询
 	private void selectEnd() {
 		try {
@@ -89,7 +105,17 @@ public class SelectChineseList {
 		}
 	}
 
-	
+	public List<String> getList() {
+		if(list == null){
+			System.out.println(" SelectChineseList.class: getList is null");
+		}
+		return list;
+	}
+
+	public void setList(List<String> list) {
+		this.list = list;
+	}
+
 	private void init(){
 		list = new ArrayList<String>();
 	}
