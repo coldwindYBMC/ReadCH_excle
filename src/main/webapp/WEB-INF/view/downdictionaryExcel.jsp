@@ -6,5 +6,5 @@
 <title>success</title>
 </head>
  <h3>文件下载</h3> 
- 	<a href="${pageContext.request.contextPath }/download?filename=dictionary_excel.xls">尚且需要翻译的字段new_dictionary_excel.xls</a>
+ 	<a href="${pageContext.request.contextPath }/download?filename=excel_dictionary.xls">字典excel_dictionary.xls</a>
 </html>

@@ -18,73 +18,79 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.springframework.stereotype.Service;
 
-import excel.server.PathType;
+import excel.Util.Util;
+import excel.server.payhenum.DicType;
+import excel.server.payhenum.PathType;
 
 /**
  * 
  * 创建字典
- * */
+ */
 @Service
 public class CreateDictionary {
 	private HSSFWorkbook wb;
 	private Sheet sheet;
 	private CellStyle comCellStyle;
 	private static int rowCount = 1;
-	private static int  SHEET_MAX_COUNT = 50000;
-	private static int  COLNUM_WIDTH = 10000;
+	private static int SHEET_MAX_COUNT = 50000;
+	private static int COLNUM_WIDTH = 10000;
 	private int sheetNum = 0;
+	private String version;
+
 	public CreateDictionary() {
-		init();
+
 	}
 
 	@SuppressWarnings({ "deprecation" })
-	public void writeExcel( List<String>list, Map<String,String>map) {		
-		
+	public void writeExcel(List<String> list, Map<String, String> map) {
+		init();
 		Font comfont = createFonts(wb, Font.BOLDWEIGHT_BOLD, "宋体", false, (short) 200);
 		Font fieldfont = createFonts(wb, Font.BOLDWEIGHT_BOLD, "宋体", false, (short) 200);
-		fieldfont .setColor(HSSFColor.GREEN.index);
-		
+		fieldfont.setColor(HSSFColor.GREEN.index);
+
 		Row row0 = sheet.createRow(0);
 		initSheet(row0, comfont);
-		
-		for(String value :list){
-			if(map.get(value) != null){  //去除已经有的字典内容
+
+		for (String value : list) {
+			if (map.get(value) != null) { // 去除已经有的字典内容
 				continue;
 			}
-			if(iscreateNewSheet()){
+			if (iscreateNewSheet()) {
 				initSheet(row0, fieldfont);
 			}
 			Row row = sheet.createRow(rowCount++);
 			createCell(comCellStyle, wb, row, 0, value, comfont);
 		}
-		
-		for(String Chkey : map.keySet()){
-			if(iscreateNewSheet()){
+
+		for (String Chkey : map.keySet()) {
+			if (iscreateNewSheet()) {
 				initSheet(row0, fieldfont);
 			}
 			Row row = sheet.createRow(rowCount++);
-			createCell(comCellStyle, wb, row, 0, Chkey, comfont); 		//原字典表中文
-			createCell(comCellStyle, wb, row, 1, map.get(Chkey), comfont);//原字典表语言1
+			createCell(comCellStyle, wb, row, 0, Chkey, comfont); // 原字典表中文
+			createCell(comCellStyle, wb, row, 1, map.get(Chkey), comfont);// 原字典表语言1
 		}
-		
+
 		writeToExcel();
-		
-	}	
-	
+
+	}
+
 	/**
 	 * 写入Excel
-	 * */
+	 */
 	public void writeToExcel() {
 		OutputStream out = null;
 		String rootPath = PathType.DownDictionary.getPath();
-		String xlsFile = rootPath + "new_dictionary_excel.xls";
+		String xlsFile = checkVersionPath(rootPath);
 		try {
 			File f = new File(rootPath);
-			if (!f.exists()) f.mkdirs();
+			if (!f.exists())
+				f.mkdirs();
 			File f1 = new File(xlsFile);
-			if (!f1.exists()) f1.createNewFile();
+			if (!f1.exists())
+				f1.createNewFile();
 			out = new FileOutputStream(xlsFile);
-			wb.write(out); //将excel写入流	
+			wb.write(out); // 将excel写入流
 			out.close();
 			wb.close();
 			rowCount = 1;
@@ -92,21 +98,31 @@ public class CreateDictionary {
 			e.printStackTrace();
 		}
 	}
-	
+
+	private String checkVersionPath(String rootPath ) {
+		if (this.version.equals("excel")) {
+			return rootPath + DicType.excel.getPath();
+		} else if (this.version.equals("ui")) {
+			return rootPath + DicType.ui.getPath();
+		} else {
+			return null;
+		}
+	}
+
 	/**
 	 * 需要创建新的sheet
-	 * */
-	public boolean iscreateNewSheet(){
+	 */
+	public boolean iscreateNewSheet() {
 		if (rowCount >= SHEET_MAX_COUNT) {
 			setSheet(wb.createSheet());
 			sheetNum++;
-			rowCount = 1;  
-			wb.setSheetName(sheetNum,"sheet"+sheetNum);
+			rowCount = 1;
+			wb.setSheetName(sheetNum, "sheet" + sheetNum);
 			return true;
 		}
 		return false;
 	}
-	
+
 	/**
 	 * 创建单元格并设置样式,值
 	 * 
@@ -150,22 +166,31 @@ public class CreateDictionary {
 	public void setSheet(Sheet sheet) {
 		this.sheet = sheet;
 	}
-	
-	private void init(){
+
+	private void init() {
 		this.wb = new HSSFWorkbook();
 		this.sheet = wb.createSheet();
 		this.comCellStyle = wb.createCellStyle();
 		wb.createCellStyle();
 	}
-	
-	private void initSheet(Row row,Font comfont){
+
+	private void initSheet(Row row, Font comfont) {
 		sheet.setColumnWidth((short) 0, (short) COLNUM_WIDTH);
 		sheet.setColumnWidth((short) 1, (short) COLNUM_WIDTH);
 		sheet.setColumnWidth((short) 2, (short) COLNUM_WIDTH);
-	
-		createCell(comCellStyle, wb, row, 0, "Chinese",comfont); 
-		createCell(comCellStyle, wb, row, 1, "language1",comfont); 
-		createCell(comCellStyle, wb, row, 2, "language2",comfont); 
-		
+
+		createCell(comCellStyle, wb, row, 0, "Chinese", comfont);
+		createCell(comCellStyle, wb, row, 1, "language1", comfont);
+		createCell(comCellStyle, wb, row, 2, "language2", comfont);
+
 	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
 }

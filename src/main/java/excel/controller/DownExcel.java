@@ -15,7 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import excel.server.PathType;
+import excel.server.payhenum.PathType;
 
 @Controller
 public class DownExcel {

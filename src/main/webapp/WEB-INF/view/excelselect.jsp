@@ -8,18 +8,29 @@
 <body>
     <form action="${pageContext.request.contextPath}/upload" enctype="multipart/form-data" method="post">
      excel多个源文件生成字典: <input type="file" name="fileList" multiple/></br/>  
-    <input type="submit" value="EXCEL生成字典"><br>
+    <label><input name="version" type="radio" value="excel" />excel</label>
+	<label><input name="version" type="radio" value="ui" />ui</label> 
+	<br>
+	  <input type="submit" value="生成字典"><br>
     </form>
-    
+    <br>
     <form action="${pageContext.request.contextPath}/uploaddic" enctype="multipart/form-data" method="post">
         上传单个字典表文件: <input type="file" name="fileTest"><br/>  
-    <input type="submit" value="EXCEL上传"><br>
+     <label><input name="version" type="radio" value="excel" />excel</label>
+	<label><input name="version" type="radio" value="ui" />ui</label> 
+	<br>
+    <input type="submit" value="上传"><br>
+    
      </form>
-     
+     <br>
     <form action="${pageContext.request.contextPath}/uploadtran" enctype="multipart/form-data" method="post">
         多个需要翻译的文件: <input type="file" name="fileTest" multiple><br/>  
-    <input type="submit" value="EXCEL翻译"><br>
+     <label><input name="version" type="radio" value="excel" />excel</label>
+	<label><input name="version" type="radio" value="ui" />ui</label> 
+	<br>
+    <input type="submit" value="翻译"><br>
     </form>
+    
     <br>
     <br>
     <br>

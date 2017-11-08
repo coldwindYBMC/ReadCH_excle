@@ -1,9 +1,10 @@
-package excel.server;
+package excel.server.payhenum;
 
 public enum FormType {
 	Source(1),
-	Dictionarty(2),
+	Excel_Dictionarty(2),
 	Translate(3),
+	UI_Dictionarty(2),
 	;
 	 
     private int code;   

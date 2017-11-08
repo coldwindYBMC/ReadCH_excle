@@ -8,17 +8,17 @@
 <body>
     <form action="${pageContext.request.contextPath}/upload" enctype="multipart/form-data" method="post">
         多个源文件生成字典: <input type="file" name="fileList" multiple/></br/>  
-    <input type="submit" value="UI生成字典"><br>
+    <input type="submit" name = "createDic" value="UI生成字典"><br>
     </form>
     
     <form action="${pageContext.request.contextPath}/uploaddic" enctype="multipart/form-data" method="post">
         上传单个字典表文件: <input type="file" name="fileTest"><br/>  
-    <input type="submit" value="UI上传"><br>
+    <input type="submit" name = "upDic" value="UI上传"><br>
      </form>
      
     <form action="${pageContext.request.contextPath}/uploadtran" enctype="multipart/form-data" method="post">
         多个需要翻译的文件: <input type="file" name="fileTest" multiple><br/>  
-    <input type="submit" value="UI翻译"><br>
+    <input type="submit" name = "tranFile" value="UI翻译"><br>
     </form>
     <br>
     <br>

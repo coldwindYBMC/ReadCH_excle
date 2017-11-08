@@ -1,10 +1,11 @@
-package excel.server.dictionary;
+package excel.server.dictionary.sereen;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -17,29 +18,34 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import excel.Util.Util;
-import excel.server.PathType;
 import hluiproj.ReadHlUIFile;
 
+/***
+ * 筛选处文件的中文
+ **/
 @Service
-public class MergeExcel {
+public class SelectChineseList {
 	@Autowired
-	private ReadHlUIFile  mergeUI;
+	private ReadHlUIFile readUI;
+	private List<String>list;
 	private FileInputStream inputStream;
-	private FileOutputStream outputStream;
 	private Workbook workbook;
 
-	
-	public void readfile(File file, Map<String,String> map){
+	public SelectChineseList() {
+		init();
+	}
+
+	public void readfile(File file){
 		//读取UI文件
 		if(file.getName().endsWith(".hluiproj")){
-			mergeUI.readUI(file,map);
+			readUI.readUI(file,list);
 		} else{
-			readExcel(file,map);//读取excel文件
+			readExcel(file);//读取excel文件
 		}
 	}
 	
 	@SuppressWarnings({ "deprecation" })
-	public void readExcel(File file, Map<String,String> map) {
+	public void readExcel(File file) {
 		if (file.getName().matches("^.+\\.(?i)((xls)|(xlsx))$")) {// 判断是否excel文档		
 			System.out.println("读入:" + file.getName());
 			boolean is03Excel = file.getName().matches("^.+\\.(?i)(xls)$");
@@ -54,13 +60,16 @@ public class MergeExcel {
 						continue;
 					}
 					if (row == null) {   //行数读完了，API获取的行数不正确
-						continue;		
+						selectEnd();
+						System.out.println("读取结束row is null:" + file.getName());
+						return;
 					}
 			
 					for (int k = 0; k < row.getLastCellNum(); k++) {
 						Cell cell = row.getCell(k);
 						if (cell == null) continue;
 						cell.setCellType(HSSFCell.CELL_TYPE_STRING);
+						
 						String value = cell.getStringCellValue();
 						if (Util.isChinese(value)) {
 							if (row0.getCell(k) == null) {                   //标题为空,清楚
@@ -70,36 +79,49 @@ public class MergeExcel {
 							if(Util.isChinese(title) || Util.isFirstLower(title)){ //清除一些title为汉字的备注
 								continue;
 							}
-							if(map.get(value) != null){
-								cell.setCellValue(map.get(value));
+							if(!list.contains(value)){ //添加到列表
+								list.add(value);
 							}
+							
 						}
 					}
 						
-				}	
-				MergeEnd(file.getName());
+				}
+				selectEnd();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
+
 	}
-
-
-	private void MergeEnd(String fileName){
-		String rootPath = PathType.FinishTranslate.getPath();
-		String xlsFile = PathType.FinishTranslate.getPath() + fileName;
+	
+	// 结束查询
+	private void selectEnd() {
 		try {
-			File f = new File(rootPath);
-			if (!f.exists()) f.mkdirs();
-			File f1 = new File(xlsFile);
-			if (!f1.exists()) f1.createNewFile();
-			outputStream = new FileOutputStream(xlsFile);
-			workbook.write(outputStream);
-			outputStream.close();
-			inputStream.close();
 			workbook.close();
+			inputStream.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+
+	public List<String> getList() {
+		if(list == null){
+			System.out.println(" SelectChineseList.class: getList is null");
+		}
+		return list;
+	}
+
+	public void setList(List<String> list) {
+		this.list = list;
+	}
+
+	private void init(){
+		list = new ArrayList<String>();
+	}
+
+	public void cleanList(){
+		this.list.clear();
+	}
+
 }

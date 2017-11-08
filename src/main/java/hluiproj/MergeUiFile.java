@@ -16,9 +16,9 @@ public class MergeUiFile {
 	public String exce(String line, Map<String, String> map) {
 		init();
 		contentScreen.chineseScreen(line, lineList);
-		for(String key : lineList){;
+		for(String key : lineList){
 			if(map.containsKey(key)){
-				line = line.replaceAll(key, map.get(key));
+				line = line.replace(key, map.get(key));
 			}
 		}
 		return line;
