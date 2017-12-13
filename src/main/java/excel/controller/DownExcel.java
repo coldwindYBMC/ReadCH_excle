@@ -2,6 +2,7 @@ package excel.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import excel.server.dictionary.OptionService;
 import excel.server.payhenum.PathType;
 
 @Controller
@@ -64,5 +66,35 @@ public class DownExcel {
         return new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file),headers,HttpStatus.CREATED);
         
     }
-
+    @RequestMapping(value="/downdir") //匹配的是href中的download请求
+    public ResponseEntity<byte[]> downloaDirZip(HttpServletRequest request,String version) throws IOException{
+    	 String downloadFilePath,filename;
+    	if(version.equals("ui")){
+    		downloadFilePath  = PathType.UiAllDictionary.getPath();//从我们的文件中取
+    		File f = new File(downloadFilePath);
+    		filename = OptionService.getDirectory(f).get(0).getName();
+    		
+    	} else{
+    		downloadFilePath  = PathType.ExcelAllDictionary.getPath();//从我们的文件中取
+    		File f = new File(downloadFilePath);
+    		filename = OptionService.getDirectory(f).get(0).getName();
+    	}
+     
+        
+        File file = new File(downloadFilePath+File.separator+filename);//新建一个文件
+        
+        
+        HttpHeaders headers = new HttpHeaders();//http头信息
+        
+        String downloadFileName = new String(filename.getBytes("UTF-8"),"iso-8859-1");//设置编码
+        
+        headers.setContentDispositionFormData("attachment", downloadFileName);
+        
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        
+        //MediaType:互联网媒介类型  contentType：具体请求中的媒体类型信息
+        
+        return new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file),headers,HttpStatus.CREATED);
+        
+    }
 }

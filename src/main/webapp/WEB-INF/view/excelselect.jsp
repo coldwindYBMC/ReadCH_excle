@@ -30,7 +30,14 @@
 	<br>
     <input type="submit" value="翻译"><br>
     </form>
-    
+     <br>
+    <form action="${pageContext.request.contextPath}/downdir" enctype="multipart/form-data" method="post">
+        下载字典:  
+    <label><input name="version" type="radio" value="excel" />excel</label>
+	<label><input name="version" type="radio" value="ui" />ui</label> 
+	<br>
+    <input type="submit" value="下载"><br>
+    </form>
     <br>
     <br>
     <br>

@@ -18,7 +18,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.springframework.stereotype.Service;
 
-import excel.Util.Util;
 import excel.server.payhenum.DicType;
 import excel.server.payhenum.PathType;
 
@@ -36,10 +35,6 @@ public class CreateDictionary {
 	private static int COLNUM_WIDTH = 10000;
 	private int sheetNum = 0;
 	private String version;
-
-	public CreateDictionary() {
-
-	}
 
 	@SuppressWarnings({ "deprecation" })
 	public void writeExcel(List<String> list, Map<String, String> map) {
@@ -78,7 +73,7 @@ public class CreateDictionary {
 	/**
 	 * 写入Excel
 	 */
-	public void writeToExcel() {
+	private void writeToExcel() {
 		OutputStream out = null;
 		String rootPath = PathType.DownDictionary.getPath();
 		String xlsFile = checkVersionPath(rootPath);
@@ -112,7 +107,7 @@ public class CreateDictionary {
 	/**
 	 * 需要创建新的sheet
 	 */
-	public boolean iscreateNewSheet() {
+	private boolean iscreateNewSheet() {
 		if (rowCount >= SHEET_MAX_COUNT) {
 			setSheet(wb.createSheet());
 			sheetNum++;

@@ -75,6 +75,7 @@ public class UploadFileService {
 						 * getInputStream()方法获取文件的输入流
 						 * 
 						 * 例如下面的语句即为通过 org.apache.commons.io.FileUtils提供的 void
+						 * 
 						 * copyInputStreamToFile(InputStream source, File
 						 * destination) 方法, 获取输入流后将其保存至指定路径
 						 */

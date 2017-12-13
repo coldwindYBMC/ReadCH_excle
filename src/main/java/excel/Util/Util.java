@@ -6,20 +6,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;
 
 public class Util {
-	
-	/**
-	 * Map<Integer, Map<String,String>> put();
-	 */
-//	public static void putDoubleMap(K, Map<String, String>> map,String primayKey, String title, String value) {
-//		if (map.containsKey(primayKey)) {
-//			map.get(primayKey).put(title, value);
-//		} else {
-//			Map<String, String> map1 = new HashMap<String, String>();
-//			map1.put(title, value);
-//			map.put(primayKey, map1);
-//		}
-//	}
-	
+
 	/**
 	 * 判断一个字符是否是中文
 	 */
@@ -47,18 +34,11 @@ public class Util {
 	 */
 	@SuppressWarnings("deprecation")
 	public static boolean existsSecondline(Sheet sheet) {
-		if (sheet.getRow(2) == null ||sheet.getRow(1) == null)  //没有前几行，不跳过
-			return false;
-		
+		if (sheet.getRow(2) == null ||sheet.getRow(1) == null)  return false;//没有前几行，不跳过
 		Cell cell1 = sheet.getRow(1).getCell(0);
 		Cell cell2 = sheet.getRow(2).getCell(0);
-		if(cell1 == null && cell2 != null){
-			return true;
-		}
-		
-		if (cell2 == null || cell1 == null)    //单元格为空
-			return false;	
-	
+		if(cell1 == null && cell2 != null) return true;
+		if (cell2 == null || cell1 == null) return false;//单元格为空	
 		cell1.setCellType(HSSFCell.CELL_TYPE_STRING);
 		cell2.setCellType(HSSFCell.CELL_TYPE_STRING);
 		String value = cell1.getStringCellValue(); 
@@ -78,7 +58,7 @@ public class Util {
 	/** 
 	 * Java文件操作 获取不带扩展名的文件名 
 	 */  
-	    public static String getFileNameNoEx(String filename) {   
+	    public static String getFileNameNoEx(String filename) {  
 	        if ((filename != null) && (filename.length() > 0)) {   
 	            int dot = filename.lastIndexOf('.');  		// . 所在的位置 
 	            if ((dot >-1) && (dot < (filename.length()))) {   

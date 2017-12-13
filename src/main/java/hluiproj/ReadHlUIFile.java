@@ -4,9 +4,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
@@ -23,8 +26,9 @@ public class ReadHlUIFile {
 	@Autowired
 	private MergeUiFile mergeUI;
 	private static BufferedReader br = null;
-	private FileWriter writer;
+	//private FileWriter writer;
 	private static StringBuffer reFile;
+	private OutputStreamWriter fw;
 
 	/**
 	 * 以行为单位读取文件,筛选中文
@@ -66,9 +70,15 @@ public class ReadHlUIFile {
 		try {
 			String line;
 			while ((line = br.readLine()) != null) {
+//				if(line.indexOf("战斗用时") != -1){
+//					System.out.println("*********************");
+//					System.out.println("FILE:"+file.getName());
+//					System.out.println("*********************");
+//				}
 				reFile.append(mergeUI.exce(line, map)).append("\n");
 			}
-			writer.write(reFile.toString());
+			fw.write(reFile.toString());
+			//writer.write(reFile.toString());
 			mergeEnd();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -93,7 +103,8 @@ public class ReadHlUIFile {
 			File f1 = new File(uiFile);
 			if (!f1.exists())
 				f1.createNewFile();
-			writer = new FileWriter(uiFile);
+			fw = new OutputStreamWriter(new FileOutputStream(uiFile), "utf-8");
+			//writer = new FileWriter(uiFile);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -102,8 +113,8 @@ public class ReadHlUIFile {
 
 	private void mergeEnd() {
 		try {
-			writer.flush();
-			writer.close();
+			fw.flush();
+			fw.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

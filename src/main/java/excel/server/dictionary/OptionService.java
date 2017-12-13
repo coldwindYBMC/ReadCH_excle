@@ -4,9 +4,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class OptionService {
+public  class OptionService {
 	
-	public List<File> getDirectory(File file) {
+	public static List<File> getDirectory(File file) {
 		List<File> list = new ArrayList<>();
 		File flist[] = file.listFiles();
 		if (flist == null || flist.length == 0) {

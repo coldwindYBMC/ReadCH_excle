@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -27,10 +28,8 @@ public class GetDictionaryMap {
 	private Workbook workbook;
 	private String version;
 
-	public GetDictionaryMap() {
 
-	}
-
+	@SuppressWarnings("deprecation")
 	public Map<String, String> exce() {
 		init();
 		map.clear();
@@ -43,8 +42,10 @@ public class GetDictionaryMap {
 				Cell cell = row.getCell(0);
 				if (cell == null)
 					continue;
+				row.getCell(0).setCellType(HSSFCell.CELL_TYPE_STRING);
 				String key = row.getCell(0).getStringCellValue();
 				if (row.getCell(1) != null) {
+					row.getCell(1).setCellType(HSSFCell.CELL_TYPE_STRING);
 					String value1 = row.getCell(1).getStringCellValue();
 					map.put(key, value1);
 				}

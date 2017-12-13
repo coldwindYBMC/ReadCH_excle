@@ -39,7 +39,7 @@ public class MergeExcel {
 	}
 	
 	@SuppressWarnings({ "deprecation" })
-	public void readExcel(File file, Map<String,String> map) {
+	private void readExcel(File file, Map<String,String> map) {
 		if (file.getName().matches("^.+\\.(?i)((xls)|(xlsx))$")) {// 判断是否excel文档		
 			System.out.println("读入:" + file.getName());
 			boolean is03Excel = file.getName().matches("^.+\\.(?i)(xls)$");
@@ -60,8 +60,13 @@ public class MergeExcel {
 					for (int k = 0; k < row.getLastCellNum(); k++) {
 						Cell cell = row.getCell(k);
 						if (cell == null) continue;
-						cell.setCellType(HSSFCell.CELL_TYPE_STRING);
-						String value = cell.getStringCellValue();
+						String value = null;
+						if(cell.getCellType() != HSSFCell.CELL_TYPE_FORMULA){
+							cell.setCellType(HSSFCell.CELL_TYPE_STRING);
+							value = cell.getStringCellValue();
+						} else{
+							value = cell.getCellFormula();
+						}
 						if (Util.isChinese(value)) {
 							if (row0.getCell(k) == null) {                   //标题为空,清楚
 								continue;
